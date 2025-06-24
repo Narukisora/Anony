@@ -23,16 +23,13 @@
         {% endfor %}
     </ul>
 
-    <h3>Messages Received</h3>
-    <div class="messages-box">
-        <ul>
-            {% for message in messages %}
-                <li><strong>{{ message.sender }}</strong> sent to 
-                    <a href="/anonymous/{{ message.site_id }}">/anonymous/{{ message.site_id }}</a>: 
-                    {{ message.message }}
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+<h3>Messages Received</h3>
+<div class="messages-box">
+    <ul>
+        {% for message in messages %}
+            <li>{{ message.message }} | Username/{{ message.sender }}</li>
+        {% endfor %}
+    </ul>
+</div>
 </body>
 </html>
