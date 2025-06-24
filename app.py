@@ -7,8 +7,8 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # Supab
-url = 'https://your-supabase-url.supabase.co'
-key = 'your-supabase-service-role-key'
+url = 'https://tuioudrarooeeerpaagd.supabase.co'
+key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1aW91ZHJhcm9vZWVlcnBhYWdkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NzA5ODksImV4cCI6MjA2NjM0Njk4OX0.0sMmH6sh0rVdxpZaN6MoxpADh0nyhpHruVADGlIrk9w'
 supabase: Client = create_client(url, key)
 
 @app.route('/')
