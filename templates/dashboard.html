@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <style>
+        .messages-box {
+            max-height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Welcome, {{ username }}</h2>
+    <a href="/generate_site">Generate A Site</a> | <a href="/logout">Logout</a>
+
+    <h3>Your Sites</h3>
+    <ul>
+        {% for site in sites %}
+            <li><a href="/anonymous/{{ site.id }}">/anonymous/{{ site.id }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <h3>Messages Received</h3>
+    <div class="messages-box">
+        <ul>
+            {% for message in messages %}
+                <li><strong>{{ message.sender }}</strong> sent to 
+                    <a href="/anonymous/{{ message.site_id }}">/anonymous/{{ message.site_id }}</a>: 
+                    {{ message.message }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
