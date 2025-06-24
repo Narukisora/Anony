@@ -10,7 +10,6 @@ app.secret_key = 'supersecretkey'
 url = 'https://tuioudrarooeeerpaagd.supabase.co'
 key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1aW91ZHJhcm9vZWVlcnBhYWdkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NzA5ODksImV4cCI6MjA2NjM0Njk4OX0.0sMmH6sh0rVdxpZaN6MoxpADh0nyhpHruVADGlIrk9w'
 supabase: Client = create_client(url, key)
-
 @app.route('/')
 def index():
     if 'user' not in session:
@@ -51,12 +50,16 @@ def generate_site():
 @app.route('/anonymous/<site_id>', methods=['GET', 'POST'])
 def anonymous_page(site_id):
     if request.method == 'POST':
+        if 'user' not in session:
+            return redirect('/login')  # Must be logged in to send
+
         message = request.form['message']
 
-        if 'user' not in session:
-            return redirect('/login')
-
-        supabase.table('messages').insert({"site_id": site_id, "sender": session['user'], "message": message}).execute()
+        supabase.table('messages').insert({
+            "site_id": site_id,
+            "sender": session['user'],  # Sender is the logged-in username
+            "message": message
+        }).execute()
         return 'Message Sent!'
 
     return render_template('anonymous.html')
@@ -66,10 +69,16 @@ def dashboard():
     if 'user' not in session:
         return redirect('/login')
 
+    # Get all sites owned by the user
     sites = supabase.table('anonymous_sites').select('*').eq('owner', session['user']).execute().data
-    messages = supabase.table('messages').select('*').order('id', desc=False).execute().data
+    site_ids = [site['id'] for site in sites]
+
+    messages = []
+    if site_ids:
+        messages = supabase.table('messages').select('*').in_('site_id', site_ids).order('id', desc=False).execute().data
 
     return render_template('dashboard.html', username=session['user'], sites=sites, messages=messages)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
